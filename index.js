@@ -1,9 +1,14 @@
 const express=require('express')
 const {connectToMongo}=require('./connect')
-const urlRoute=require('./routes/url');
 const URL = require('./models/url');
+const cookieParser=require("cookie-parser")
+const urlRoute=require('./routes/url');
 const path=require('path')
 const staticRouter=require("./routes/StaticRouter")
+const UserRoute=require("./routes/user");
+const { restrictToLoggedIn,checkAuth } = require('./middlewares/auth');
+
+
 const app=express();    
 const PORT=9000;
 
@@ -19,9 +24,11 @@ app.set("views",path.resolve("./views"))
 //MiddleWares
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
+app.use(cookieParser())
 
-app.use('/url',urlRoute);   
-app.use("/",staticRouter)
+app.use('/url',restrictToLoggedIn,urlRoute);   
+app.use("/",checkAuth,staticRouter)
+app.use("/user",UserRoute)
 
  
   
