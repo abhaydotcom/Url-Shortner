@@ -9,14 +9,14 @@ async function handleGenerateUrl(req,res){
 
     await URL.create({
         shortId:shortID,
-        redirectUrl:body.url,
+        redirectUrl:body.url,   
         visitHistory:[],
         createdBy:req.user._id
     })
     return res.render("home",{
         id:shortID
     })
-   
+    
 }
 
 

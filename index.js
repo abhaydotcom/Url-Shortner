@@ -6,7 +6,7 @@ const urlRoute=require('./routes/url');
 const path=require('path')
 const staticRouter=require("./routes/StaticRouter")
 const UserRoute=require("./routes/user");
-const { restrictToLoggedIn,checkAuth } = require('./middlewares/auth');
+const { checkForAuthentication,restrictTo } = require('./middlewares/auth');
 
 
 const app=express();    
@@ -25,9 +25,10 @@ app.set("views",path.resolve("./views"))
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser())
+app.use(checkForAuthentication)
 
-app.use('/url',restrictToLoggedIn,urlRoute);   
-app.use("/",checkAuth,staticRouter)
+app.use('/url',restrictTo(["NORMAL","ADMIN"]),urlRoute);   
+app.use("/",staticRouter)
 app.use("/user",UserRoute)
 
  
